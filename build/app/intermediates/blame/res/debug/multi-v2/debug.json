@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/cynthiafranco/Documents/Projetos/workshop_flutter/workshop_flutter/build/app/intermediates/res/merged/debug/values_values.arsc.flat",
+            "outputFile": "/Users/cynthiafranco/Documents/Projetos/workshop_flutter/build/app/intermediates/res/merged/debug/values_values.arsc.flat",
             "map": [
                 {
-                    "source": "/Users/cynthiafranco/Documents/Projetos/workshop_flutter/workshop_flutter/android/app/src/main/res/values/styles.xml",
+                    "source": "/Users/cynthiafranco/Documents/Projetos/workshop_flutter/android/app/src/main/res/values/styles.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
