@@ -1,0 +1,4 @@
+#Sat Mar 09 21:25:42 BRT 2019
+base.0=/Users/cynthiafranco/Documents/Projetos/workshop_flutter/workshop_flutter/build/app/intermediates/transforms/dexMerger/debug/0
+path.0=classes.dex
+renamed.0=classes.dex
