@@ -7,64 +7,69 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
+import 'package:mockito/mockito.dart';
 import 'package:workshop_flutter/main.dart';
+import 'package:workshop_flutter/data/item.dart';
+import 'package:workshop_flutter/data/item_repository.dart';
+import 'mocks.dart';
 
 void main() {
-
-  _createTodoItem(WidgetTester tester) async{
+  _createTodoItem(WidgetTester tester) async {
     await tester.tap(find.byIcon(Icons.add));
     await tester.pumpAndSettle();
-    await tester.enterText(find.byType(TextField), "New item to be done");
-    await tester.tap(find.byKey(Key("Add")));
+    await tester.enterText(find.byType(TextField), 'New item to be done');
+    await tester.tap(find.byKey(Key('Add')));
     await tester.pumpAndSettle();
   }
-  
-  testWidgets('Todo is only added when has a confirmation', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp());
 
-    // Verify that the todo widget is displayed
-    expect(find.text('Texto'), findsNothing);
+  testWidgets('Todo is shown', (WidgetTester tester) async {
+    // Given
+    Item item = Item(description: 'Item description');
+    final firestore = MockFirestore();
+    final collection = MockCollectionReference();
+    final existingDocument = MockDocumentSnapshot(item.toJson());
+    final itemRepository = ItemRepository(firestore: firestore);
+    final snapshot = MockQuerySnapshot();
+    final snapshots = Stream.fromIterable([snapshot]);
 
-    await _createTodoItem(tester);
+    when(firestore.collection(ItemRepository.path)).thenReturn(collection);
+    when(collection.snapshots()).thenAnswer((_) => snapshots);
+    when(snapshot.documents).thenReturn([existingDocument]);
+    when(existingDocument.documentID).thenReturn('qXmZomiaCQPR3cOLS67J');
 
-    // Verify that the todo item was created
-    expect(find.text("New item to be done"), findsWidgets);
-  });
-
-  testWidgets('Update opacity and style when checkbox is checked', (WidgetTester tester) async {
-    final SemanticsHandle handle = tester.ensureSemantics();
-
-    await tester.pumpWidget(MyApp());
-
-    await _createTodoItem(tester);
-
-    expect(tester.getSemantics(find.byType(Checkbox).first), matchesSemantics(
-      hasCheckedState: true,
-      hasEnabledState: true,
-      isEnabled: true,
-      hasTapAction: true,
-      isChecked: false
-    ));
-
-    expect(tester.firstWidget<AnimatedOpacity>(find.byType(AnimatedOpacity)).opacity, 1);
-    expect(tester.firstWidget<Text>(find.byType(Text)).style.fontStyle, FontStyle.normal);
-
-    await tester.tap(find.byType(Checkbox).first);
+    // When
+    await tester.pumpWidget(MyApp(itemRepository: itemRepository));
     await tester.pumpAndSettle();
 
-    expect(tester.firstWidget<AnimatedOpacity>(find.byType(AnimatedOpacity)).opacity, 0.5);
-    expect(tester.firstWidget<Text>(find.byType(Text)).style.fontStyle, FontStyle.italic);
+    // Verify that the TodoItem is shown
+    expect(find.text('Item description'), findsWidgets);
+    verify(collection.snapshots());
+    verify(snapshot.documents);
+    verify(existingDocument.documentID);
+  });
 
-    expect(tester.getSemantics(find.byType(Checkbox).first), matchesSemantics(
-      hasCheckedState: true,
-      hasEnabledState: true,
-      isEnabled: true,
-      hasTapAction: true,
-      isChecked: true
-    ));
+  testWidgets('Todo is only added when has a confirmation',
+      (WidgetTester tester) async {
+    // Given
+    final firestore = MockFirestore();
+    final collection = MockCollectionReference();
+    final newDocument = MockDocumentReference();
+    final itemRepository = ItemRepository(firestore: firestore);
+    final snapshot = MockQuerySnapshot();
+    final snapshots = Stream.fromIterable([snapshot]);
+    when(firestore.collection(ItemRepository.path)).thenReturn(collection);
+    when(collection.document()).thenReturn(newDocument);
+    when(collection.snapshots()).thenAnswer((_) => snapshots);
+    when(snapshot.documents).thenReturn([]);
+    // Build our app and trigger a frame.
+    await tester.pumpWidget(MyApp(itemRepository: itemRepository));
 
-    handle.dispose();
+    // When
+    await _createTodoItem(tester);
+
+    // Verify that the TodoItem was created
+    verify(collection.document());
+    verify(newDocument
+        .setData({'description': 'New item to be done', 'state': false}));
   });
 }
