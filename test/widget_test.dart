@@ -11,12 +11,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:workshop_flutter/main.dart';
 
 void main() {
-  testWidgets('Text is still being displayed', (WidgetTester tester) async {
+  testWidgets('Text is only displayed when button is pressed', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(MyApp());
 
     // Verify that the todo widget is displayed
-    expect(find.text('Texto'), findsWidgets);
+    expect(find.text('Texto'), findsNothing);
 
     // Tap the '+' icon and trigger a frame.
     await tester.tap(find.byIcon(Icons.add));
@@ -30,6 +30,9 @@ void main() {
     final SemanticsHandle handle = tester.ensureSemantics();
 
     await tester.pumpWidget(MyApp());
+
+    await tester.tap(find.byIcon(Icons.add));
+    await tester.pump();
 
     expect(tester.getSemantics(find.byType(Checkbox).first), matchesSemantics(
       hasCheckedState: true,
