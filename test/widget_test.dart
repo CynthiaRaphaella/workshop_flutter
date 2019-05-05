@@ -11,19 +11,26 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:workshop_flutter/main.dart';
 
 void main() {
-  testWidgets('Text is only displayed when button is pressed', (WidgetTester tester) async {
+
+  _createTodoItem(WidgetTester tester) async{
+    await tester.tap(find.byIcon(Icons.add));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), "New item to be done");
+    await tester.tap(find.byKey(Key("Add")));
+    await tester.pumpAndSettle();
+  }
+  
+  testWidgets('Todo is only added when has a confirmation', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(MyApp());
 
     // Verify that the todo widget is displayed
     expect(find.text('Texto'), findsNothing);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    await _createTodoItem(tester);
 
-    // Verify that the todo widget is still displayed
-    expect(find.text('Texto'), findsWidgets);
+    // Verify that the todo item was created
+    expect(find.text("New item to be done"), findsWidgets);
   });
 
   testWidgets('Update opacity and style when checkbox is checked', (WidgetTester tester) async {
@@ -31,8 +38,7 @@ void main() {
 
     await tester.pumpWidget(MyApp());
 
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    await _createTodoItem(tester);
 
     expect(tester.getSemantics(find.byType(Checkbox).first), matchesSemantics(
       hasCheckedState: true,

@@ -23,11 +23,13 @@ class HomeScreenState extends State<HomeScreen> {
 
     _createNewTodo() async {
       final result = await Navigator.of(context).push(
-                new MaterialPageRoute(builder: (context) => new NewTodo())
-              );
-      setState(() {
-        widget.items.add(new TodoItem(item: result, callback: _toggleTodo));
-      });
+        new MaterialPageRoute(builder: (context) => new NewTodo())
+      );
+      if(result != null) {
+        setState(() {
+          widget.items.add(new TodoItem(item: result, callback: _toggleTodo));
+        });
+      }
   }
 
   _toggleTodo(Item todo, bool isChecked) {

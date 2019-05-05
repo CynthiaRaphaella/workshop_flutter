@@ -10,7 +10,8 @@ class NewTodo extends StatelessWidget {
     return AlertDialog(
       title: Text('Create todo'),
       content: TextField(
-        controller: controller
+        controller: controller,
+        autofocus: true
       ),
       actions: <Widget>[
         FlatButton(
@@ -20,7 +21,7 @@ class NewTodo extends StatelessWidget {
           },
         ),
         FlatButton(
-          child: Text('Add'),
+          child: Text('Add', key: new Key("Add")),
           onPressed: () {
             final todo = new Item(description: controller.value.text);
             controller.clear();
