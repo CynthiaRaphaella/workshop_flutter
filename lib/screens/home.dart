@@ -16,15 +16,9 @@ class HomeScreenState extends State<HomeScreen> {
         body: TodoList(items: widget.items),
         floatingActionButton: FloatingActionButton(
           onPressed: () => setState(() { 
-              widget.items.add(new TodoItem(item: new Item(description: "Texto"), callback: _toggleTodo)); 
+              widget.items.add(new TodoItem(item: new Item(description: "Texto"))); 
           }),
           child: Icon(Icons.add),
         ),
       );
-
-  _toggleTodo(Item todo, bool isChecked) {
-    setState(() {
-      todo.state = isChecked;
-    });
-  }
 }
