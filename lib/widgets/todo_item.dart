@@ -3,8 +3,7 @@ import 'package:workshop_flutter/data/item.dart';
 
 class TodoItem extends StatefulWidget {
   final Item item;
-  final void Function(Item, bool) callback;
-  const TodoItem({Key key, this.item, this.callback}) : super(key: key);
+  const TodoItem({Key key, this.item}) : super(key: key);
   @override
   State<StatefulWidget> createState() => TodoItemState();
 }
@@ -36,18 +35,17 @@ class TodoItemState extends State<TodoItem> {
 
   _changeCheckBox(bool newValue) {
     setState(() {
-      widget.callback(widget.item, newValue);
+      widget.item.state = newValue;
       _changeFontStyle();
       _changeOpacity();
     });
   }
 
   _changeOpacity() {
-    setState(() => _opacityLevel = _opacityLevel == 0.5 ? 1.0 : 0.5);
+    _opacityLevel = _opacityLevel == 0.5 ? 1.0 : 0.5;
   }
 
   _changeFontStyle() {
-    setState(() => _fontStyle =
-        _fontStyle == FontStyle.normal ? FontStyle.italic : FontStyle.normal);
+    _fontStyle = _fontStyle == FontStyle.normal ? FontStyle.italic : FontStyle.normal;
   }
 }

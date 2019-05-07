@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:workshop_flutter/data/item.dart';
 import 'package:workshop_flutter/screens/new_todo.dart';
 import 'package:workshop_flutter/widgets/todo_item.dart';
 import 'package:workshop_flutter/widgets/todo_list.dart';
@@ -27,14 +26,8 @@ class HomeScreenState extends State<HomeScreen> {
       );
       if(result != null) {
         setState(() {
-          widget.items.add(new TodoItem(item: result, callback: _toggleTodo));
+          widget.items.add(new TodoItem(item: result));
         });
       }
-  }
-
-  _toggleTodo(Item todo, bool isChecked) {
-    setState(() {
-      todo.state = isChecked;
-    });
   }
 }
