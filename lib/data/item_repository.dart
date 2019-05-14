@@ -26,6 +26,5 @@ class ItemRepository {
   Future<void> update(Item item) =>
       firestore.collection(path).document(item.id).updateData(item.toJson());
 
-  Future<void> delete(Item item) =>
-      firestore.collection(path).document(item.id).delete();
+  Future<void> delete(Item item) => Future.value(null);
 }
